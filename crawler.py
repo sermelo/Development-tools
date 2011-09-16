@@ -20,16 +20,23 @@ def read_web(urlweb,n):
         n=n-1
         for link in soup_code.findAll('a'):
             if link.has_key("href"):
-               # print link["href"]
                 if n>=0:
                     auxlink=str(link['href'])
+                    try:
+                        auxlink=str(link['href'])
+                    except UnicodeEncodeError:
+                        print "UnicodeError captured"
+                        continue
                     auxlink=auxlink.strip()
+                    auxlink=auxlink.lower()
                     if auxlink=="":
+                        continue
+                    elif auxlink.rfind("javascript")!=-1:
+                        continue
+                    elif auxlink[0]=="#":
                         continue
                     elif auxlink[0]=="/":
                         read_web(urlweb+link['href'],n)
-                    elif auxlink[0]=="#":
-                        continue
                     else:
                         read_web(auxlink,n)
             
@@ -38,6 +45,4 @@ parser=argparse.ArgumentParser(description="This is a crawler")
 parser.add_argument('-n','--number-of-levels',type=int,default=1,help="Number of desired depth")
 parser.add_argument('url',nargs=1,help="target URL")
 args=parser.parse_args()
-print args.number_of_levels
-#print args.url.pop()
 read_web(args.url.pop(),args.number_of_levels)
