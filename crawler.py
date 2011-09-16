@@ -23,8 +23,9 @@ def read_web(urlweb,n):
             
 
 parser=argparse.ArgumentParser(description="This is a crawler")
-#parser.add_argument('-n','--number-of-levels',int,default=1,help="Number of desired depth")
-
-#print args.number_of_levels.pop()
-
-read_web(urlweb,2)
+parser.add_argument('-n','--number-of-levels',type=int,default=1,help="Number of desired depth")
+parser.add_argument('url',nargs=1,help="target URL")
+args=parser.parse_args()
+print args.number_of_levels
+#print args.url.pop()
+read_web(args.url.pop(),args.number_of_levels)
