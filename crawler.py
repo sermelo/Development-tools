@@ -10,9 +10,10 @@ def read_web(urlweb,n):
     if n==0:
         print urlweb
     else:
+        print "----"+urlweb
         _opener = urllib2.build_opener()
         try:
-            raw_code = _opener.open(urlweb).read()
+            raw_code = _opener.open(urlweb,"",5).read()
         except:
             print "We could not open this url:"+urlweb
             return
@@ -21,7 +22,6 @@ def read_web(urlweb,n):
         for link in soup_code.findAll('a'):
             if link.has_key("href"):
                 if n>=0:
-                    auxlink=str(link['href'])
                     try:
                         auxlink=str(link['href'])
                     except UnicodeEncodeError:
