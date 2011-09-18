@@ -4,7 +4,6 @@ from BeautifulSoup import BeautifulSoup as Soup
 import urllib2
 import argparse
 import sys
-import progressbar
 
 
 complete_list=[]
@@ -56,6 +55,14 @@ def init_list(n):
     for i in range(n+1):
         complete_list.append([])
 
+def show_summary():
+    global complete_list
+    print "\n\nThis is the sumary:"
+    counter=0
+    for level in complete_list:
+        print "Level "+str(counter)+": "+str(len(level))
+        counter=counter+1
+
 def show_links():
     global complete_list
     counter=0
@@ -76,6 +83,7 @@ parser.add_argument('url',nargs=1,help="target URL")
 args=parser.parse_args()
 init_list(args.number_of_levels)
 read_web(args.url.pop(),args.number_of_levels,args.number_of_levels)
+show_summary()
 show_links()
 
 
