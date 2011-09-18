@@ -4,12 +4,18 @@ from BeautifulSoup import BeautifulSoup as Soup
 import urllib2
 import argparse
 
-urlweb="http://www.wired.com/"
-
 complete_list=[]
 
 def read_web(urlweb,n,total_levels):
     global complete_list
+    for i in range(total_levels-n+1):
+        try:
+            complete_list[i].index(urlweb)
+#            print "Repeated:"+urlweb
+            return
+        except ValueError:
+            continue
+
     complete_list[total_levels-n].append(urlweb)
     print urlweb
     if n!=0:
