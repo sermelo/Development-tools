@@ -6,11 +6,13 @@ import argparse
 
 urlweb="http://www.wired.com/"
 
-def read_web(urlweb,n):
-    if n==0:
-        print urlweb
-    else:
-        print "----"+urlweb
+complete_list=[]
+
+def read_web(urlweb,n,total_levels):
+    global complete_list
+    complete_list[total_levels-n].append(urlweb)
+    print urlweb
+    if n!=0:
         _opener = urllib2.build_opener()
         try:
             raw_code = _opener.open(urlweb,"",5).read()
@@ -36,13 +38,32 @@ def read_web(urlweb,n):
                     elif auxlink[0]=="#":
                         continue
                     elif auxlink[0]=="/":
-                        read_web(urlweb+link['href'],n)
+                        read_web(urlweb+link['href'],n,total_levels)
                     else:
-                        read_web(auxlink,n)
-            
+                        read_web(auxlink,n,total_levels)
+
+def init_list(n):
+    global complete_list
+    complete_list=[]
+    for i in range(n+1):
+        complete_list.append([])
+
 
 parser=argparse.ArgumentParser(description="This is a crawler")
 parser.add_argument('-n','--number-of-levels',type=int,default=1,help="Number of desired depth")
 parser.add_argument('url',nargs=1,help="target URL")
 args=parser.parse_args()
-read_web(args.url.pop(),args.number_of_levels)
+init_list(args.number_of_levels)
+read_web(args.url.pop(),args.number_of_levels,args.number_of_levels)
+#print complete_list
+#print complete_list[0][0]
+#print complete_list[0][1]
+
+
+
+
+
+
+
+
+
