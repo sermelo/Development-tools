@@ -34,7 +34,8 @@ def read_web(urlweb,n,total_levels):
             if link.has_key("href"):
                 if n>=0:
                     try:
-                        auxlink=str(link['href'])
+                        #auxlink=str(link['href'])
+                        auxlink=link['href']
                     except UnicodeEncodeError:
                         print "\nUnicodeError captured:"+link['href']
                         continue
@@ -46,6 +47,8 @@ def read_web(urlweb,n,total_levels):
                         continue
                     elif auxlink[0]=="#":
                         continue
+                    elif auxlink[0]=='?':
+                        read_web(urlweb+auxlink,n,total_levels)
                     elif auxlink[0]=="/":
                         num=-1
                         done=False
