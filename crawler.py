@@ -54,10 +54,11 @@ def read_web(urlweb,n,total_levels):
             if link.has_key("href"):
                 if n>=0:
                     try:
-                        #auxlink=str(link['href'])
+                        auxlink=str(link['href'])
                         auxlink=link['href']
                     except UnicodeEncodeError:
-                        print "\nUnicodeError captured:"+link['href']
+                        print "\nUnicodeError captured"
+       #                 print "\nUnicodeError captured:"+link['href']
                         continue
                     auxlink=auxlink.strip()
                     auxlink=auxlink.lower()
