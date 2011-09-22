@@ -26,6 +26,7 @@ def read_web(urlweb,n,total_levels):
     global complete_list
     global repeated
     global tree_mode
+    urlweb=urlweb.rstrip("/")
     for i in range(total_levels-n+1):
         try:
             complete_list[i].index(urlweb)
@@ -72,7 +73,7 @@ def read_web(urlweb,n,total_levels):
                         continue
                     elif auxlink[0]=='?':
                         read_web(urlweb+auxlink,n,total_levels)
-                    elif auxlink.rfind("http://")==-1:
+                    elif auxlink.rfind("http")==-1:
                         num=-1
                         done=False
                         for i in range(3):
