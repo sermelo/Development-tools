@@ -40,7 +40,7 @@ def read_web(urlweb,n,total_levels):
     if n!=0:
         _opener = urllib2.build_opener()
         try:
-            raw_code = _opener.open(urlweb,"",10).read()
+            raw_code = _opener.open(urlweb,"",4).read()
         except:
             print "\nWe could not open this url:"+urlweb
             return
