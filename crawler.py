@@ -48,7 +48,10 @@ def read_web(urlweb,n,total_levels):
         except:
             print "\nWe could not open this url:"+urlweb
             return
-        soup_code = Soup ( raw_code )
+        try:
+            soup_code = Soup (raw_code)
+        except UnicodeEncodeError:
+            print "Unicode Error in the html web: "+urlweb
         n=n-1
         for link in soup_code.findAll('a'):
             if link.has_key("href"):
@@ -58,7 +61,6 @@ def read_web(urlweb,n,total_levels):
                         auxlink=link['href']
                     except UnicodeEncodeError:
                         print "\nUnicodeError captured"
-       #                 print "\nUnicodeError captured:"+link['href']
                         continue
                     auxlink=auxlink.strip()
                     auxlink=auxlink.lower()
@@ -70,7 +72,7 @@ def read_web(urlweb,n,total_levels):
                         continue
                     elif auxlink[0]=='?':
                         read_web(urlweb+auxlink,n,total_levels)
-                    elif auxlink[0]=="/":
+                    elif auxlink.rfind("http://")==-1:
                         num=-1
                         done=False
                         for i in range(3):
