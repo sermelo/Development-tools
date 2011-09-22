@@ -4,31 +4,46 @@ from BeautifulSoup import BeautifulSoup as Soup
 import urllib2
 import argparse
 import sys
+import os
 
 
 complete_list=[]
 
+def refresh(self, **kw):
+    # Clear line
+    sys.stdout.write(self.ESC + '[2K')
+    self.reset_cursor()
+    sys.stdout.write(self.get_meter(**kw))
+    # Are we finished?
+    if self.count >= self.total:
+        sys.stdout.write('\n')
+    sys.stdout.flush()
+    # Timestamp
+    self.last_refresh = time.time()
+
+
 def read_web(urlweb,n,total_levels):
     global complete_list
+    global repeated
+    global tree_mode
     for i in range(total_levels-n+1):
         try:
             complete_list[i].index(urlweb)
+            repeated+=1
             return
         except ValueError:
             continue
-
+    if tree_mode:
+        print "eo"
     complete_list[total_levels-n].append(urlweb)
-    sys.stdout.write(".")
     if n!=0:
         _opener = urllib2.build_opener()
         try:
             raw_code = _opener.open(urlweb,"",10).read()
-            sys.stdout.write(".")
         except:
             print "\nWe could not open this url:"+urlweb
             return
         soup_code = Soup ( raw_code )
-        sys.stdout.write(".")
         n=n-1
         for link in soup_code.findAll('a'):
             if link.has_key("href"):
@@ -66,6 +81,9 @@ def read_web(urlweb,n,total_levels):
                             read_web(urlweb[0:num]+auxlink,n,total_levels)
                     else:
                         read_web(auxlink,n,total_levels)
+    if not tree_mode:
+        show_summary()
+
 
 def init_list(n):
     global complete_list
@@ -75,11 +93,13 @@ def init_list(n):
 
 def show_summary():
     global complete_list
+    os.system( [ 'clear', 'cls' ][ os.name == 'nt' ] )
     print "\n\nThis is the sumary:"
     counter=0
     for level in complete_list:
         print "Level "+str(counter)+": "+str(len(level))
         counter=counter+1
+    print "Repeate links: "+str(repeated)
 
 def show_links():
     global complete_list
@@ -98,10 +118,13 @@ def show_links():
 parser=argparse.ArgumentParser(description="This is a crawler")
 parser.add_argument('-n','--number-of-levels',type=int,default=1,help="Number of desired depth")
 parser.add_argument('url',nargs=1,help="target URL")
+parser.add_argument('-t','--tree-mode',action='store_true',help="Tree mode active",required=False)
 args=parser.parse_args()
+repeated=0
 init_list(args.number_of_levels)
+tree_mode=args.tree_mode
+
 read_web(args.url.pop(),args.number_of_levels,args.number_of_levels)
-show_summary()
 show_links()
 
 
