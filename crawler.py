@@ -4,10 +4,11 @@ from BeautifulSoup import BeautifulSoup as Soup
 import urllib2
 import argparse
 import sys
+import signal
 import os
 
-
 complete_list=[]
+
 
 def read_web(urlweb,n,total_levels):
     global complete_list
@@ -60,6 +61,21 @@ def read_web(urlweb,n,total_levels):
                         continue
                     elif auxlink[0]=='?':
                         read_web(urlweb+auxlink,n,total_levels)
+                    elif auxlink[0]=='/':
+                        num=-1
+                        done=False
+                        for i in range(3):
+                            num+=1
+                            try:
+                              #  print urlweb
+                                num=urlweb.index("/",num)
+                            except ValueError:
+                                done=True
+                                break
+                        if done==True:
+                            read_web(urlweb+auxlink,n,total_levels)
+                        else:
+                            read_web(urlweb[0:num]+auxlink,n,total_levels)
                     elif auxlink.rfind("http")==-1:
                         num=-1
                         done=False
@@ -72,9 +88,9 @@ def read_web(urlweb,n,total_levels):
                                 done=True
                                 break
                         if done==True:
-                            read_web(urlweb+auxlink,n,total_levels)
+                            read_web(urlweb2+'/'+auxlink,n,total_levels)
                         else:
-                            read_web(urlweb[0:num]+auxlink,n,total_levels)
+                            read_web(urlweb2[0:num]+'/'+auxlink,n,total_levels)
                     else:
                         read_web(auxlink,n,total_levels)
     if not tree_mode:
@@ -110,6 +126,7 @@ def show_links():
         if show=="y":
             for link in level:
                 print link
+
 
 parser=argparse.ArgumentParser(description="This is a crawler")
 parser.add_argument('-n','--number-of-levels',type=int,default=1,help="Number of desired depth")
