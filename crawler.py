@@ -9,35 +9,22 @@ import os
 
 complete_list=[]
 
-def refresh(self, **kw):
-    # Clear line
-    sys.stdout.write(self.ESC + '[2K')
-    self.reset_cursor()
-    sys.stdout.write(self.get_meter(**kw))
-    # Are we finished?
-    if self.count >= self.total:
-        sys.stdout.write('\n')
-    sys.stdout.flush()
-    # Timestamp
-    self.last_refresh = time.time()
-
-
 def read_web(urlweb,n,total_levels):
     global complete_list
     global repeated
     global tree_mode
-    urlweb=urlweb.rstrip("/")
+    urlweb2=urlweb.rstrip("/")
     for i in range(total_levels-n+1):
         try:
-            complete_list[i].index(urlweb)
+            complete_list[i].index(urlweb2)
             repeated+=1
             return
         except ValueError:
             continue
     if tree_mode:
-        print "-"*(total_levels-n)+urlweb
+        print "-"*(total_levels-n)+urlweb2
 
-    complete_list[total_levels-n].append(urlweb)
+    complete_list[total_levels-n].append(urlweb2)
     if n!=0:
 
         user_agent = "Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/534.7 (KHTML, like Gecko) Chrome/7.0.517.41 Safari /534.7 "
@@ -45,7 +32,7 @@ def read_web(urlweb,n,total_levels):
         opener.addheaders=[('User-agent',user_agent)]
 
         try:
-            raw_code = opener.open(urlweb,"",4).read()
+            raw_code = opener.open(urlweb,"",6).read()
         except:
             print "\nWe could not open this url:"+urlweb
             return
