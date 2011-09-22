@@ -34,7 +34,8 @@ def read_web(urlweb,n,total_levels):
         except ValueError:
             continue
     if tree_mode:
-        print "eo"
+        print "-"*(total_levels-n)+urlweb
+
     complete_list[total_levels-n].append(urlweb)
     if n!=0:
         _opener = urllib2.build_opener()
